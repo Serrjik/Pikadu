@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('SFProDisplay-Semibold.eot');
+    src: local('SF Pro Display Semibold'), local('SFProDisplay-Semibold'),
+        url('SFProDisplay-Semibold.eot?#iefix') format('embedded-opentype'),
+        url('SFProDisplay-Semibold.woff2') format('woff2'),
+        url('SFProDisplay-Semibold.woff') format('woff'),
+        url('SFProDisplay-Semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: url('SFProDisplay-Regular.eot');
+    src: local('SF Pro Display Regular'), local('SFProDisplay-Regular'),
+        url('SFProDisplay-Regular.eot?#iefix') format('embedded-opentype'),
+        url('SFProDisplay-Regular.woff2') format('woff2'),
+        url('SFProDisplay-Regular.woff') format('woff'),
+        url('SFProDisplay-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
