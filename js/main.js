@@ -38,6 +38,8 @@ const editPhotoURL = editContainer.querySelector('.edit-photo')
 
 // Контейнер для постов.
 const postsWrapper = document.querySelector('.posts')
+// Кнопка добавления поста.
+const buttonNewPost = document.querySelector('.button-new-post')
 
 // Пользователи сайта (тестовые данные).
 const listUsers = [
@@ -192,7 +194,7 @@ const setPosts = {
 			title: 'Заголовок поста с интригой',
 			text: `<p>Таким образом укрепление и развитие структуры требуют от нас анализа форм развития. Не следует, однако забывать, что реализация намеченных плановых заданий требуют от нас анализа позиций, занимаемых участниками в отношении поставленных задач. Задача организации, в особенности же консультация с широким активом способствует подготовки и реализации новых предложений. Равным образом новая модель организационной деятельности позволяет оценить значение модели развития.</p>`,
 			tags: ['свежее', 'горячее', 'мое', 'случайность'],
-			author: 'info@serjik.by',
+			author: {displayName: 'serjik', photo: './img/avatar.jpg'},
 			date: '11.11.2020 20:54:00',
 			like: 45,
 			comments: 12,
@@ -203,7 +205,7 @@ const setPosts = {
 			<p>В новой версии ОС компания изменила дизайн меню «Пуск», заменила старый браузер Edge на новый, основанный на Chromium, и внесла несколько мелких изменений в настройки и внешний вид системы.</p>
 			<p>Теперь в состав Windows 10 будет входит обновленный браузер Microsoft Edge на базе Chromium — он заменит старый Edge для всех пользователей.</p>`,
 			tags: ['новость', 'microsoft', 'windows'],
-			author: 'petr@petrov.by',
+			author: {displayName: 'petr', photo: './img/avatar1.jpg'},
 			date: '11.11.2020 20:54:00',
 			like: 155,
 			comments: 234,
@@ -216,7 +218,7 @@ const setPosts = {
 			<p>Я пишу на С++. В первом туре я решил одну задачу за час на 100 баллов, остальные две были сложнее. Во втором туре были две простые задачи и одна сложная. Я решил две задачи за 2,5 часа, но последнюю мне так и не удалось решить.</p>
 			<p>Во время тура участникам нельзя общаться. Если во время контеста есть вопрос по условиям, то можно задать его в тестирующей системе и жюри олимпиады ответит. После окончания тура мы обсудили задачи и я понял, как можно было улучшить мое решение. Решение этой задачи на 100 баллов было нестандартным, до него можно было только догадаться. Я решил ее частично.</p>`,
 			tags: ['новость', 'microsoft', 'windows'],
-			author: 'tinkoff@tinkoff.com',
+			author: {displayName: 'tinkoff', photo: './img/avatar2.jpg'},
 			date: '11.11.2020 20:54:00',
 			like: 5,
 			comments: 3,
@@ -247,6 +249,8 @@ const toggleAuthDom = () => {
 			который записан сейчас в свойство src элемента.
 		*/
 		userAvatarElem.src = user.photo || userAvatarElem.src
+		// Показать кнопку добавления поста.
+		buttonNewPost.classList.add('visible')
 	}
 
 	// Если пользователь НЕ авторизован на сайте:
@@ -255,6 +259,8 @@ const toggleAuthDom = () => {
 		loginElem.style.display = ''
 		// Скрываем блок с информацией о пользователе.
 		userElem.style.display = 'none'
+		// Скрыть кнопку добавления поста.
+		buttonNewPost.classList.remove('visible')
 	}
 }
 
@@ -266,10 +272,10 @@ const showAllPosts = () => {
 	setPosts.allPosts.forEach(({
 		title,
 		text,
+		date,
 		like,
 		comments,
 		author,
-		photo,
 		tags
 	}) => {
 		postsHTML += `
@@ -319,13 +325,13 @@ const showAllPosts = () => {
 				<!-- .post-author -->
 				<div class="post-author">
 					<div class="author-about">
-						<a href="#" class="author-username">${author}</a>
+						<a href="#" class="author-username">${author.displayName}</a>
 						<span class="post-time">5 минут назад</span>
 					</div>
 					<a href="#" class="author-link">
 						<img
 							class="author-avatar"
-							src=${photo}
+							src=${author.photo || "../img/avatar1.jpg"}
 							alt="avatar"
 						>
 					</a>

@@ -191,6 +191,7 @@ img {
 }
 
 .tags {
+	color: #BFBFBF;
 	margin-bottom: 22px;
 }
 
@@ -198,9 +199,13 @@ img {
 	font-weight: normal;
 	font-size: 14px;
 	line-height: 22px;
-	color: #BFBFBF;
 	text-decoration: none;
-	margin-right: 10px;
+	color: #BFBFBF;
+	margin-left: 10px;
+}
+
+.tag:first-child {
+	margin-left: 0;
 }
 
 .post-footer {
@@ -287,6 +292,7 @@ img {
 	width: 34px;
 	height: 34px;
 	border-radius: 4px;
+	object-fit: cover;
 }
 
 @media (max-width: 576px) {
@@ -564,6 +570,10 @@ img {
 	margin-top: 20px;
 }
 
+.button-new-post.visible {
+	display: flex;
+}
+
 .button-outline {
 	background: #FFFFFF;
 	border: 1px solid #FFC53D;
@@ -653,6 +663,7 @@ img {
 .add-post {
 	display: flex;
 	flex-direction: column;
+	width: 67%;
 }
 
 .add-title,
