@@ -152,7 +152,12 @@ img {
 }
 
 .posts {
+	display: none;
 	width: 67%;
+}
+
+.posts.visible {
+	display: block;
 }
 
 @media (max-width: 990px) {
@@ -184,6 +189,7 @@ img {
 	font-size: 14px;
 	line-height: 22px;
 	color: #262626;
+	word-break: break-all;
 }
 
 .post-text p {
@@ -661,13 +667,18 @@ img {
 }
 
 .add-post {
-	display: flex;
+	display: none;
 	flex-direction: column;
 	width: 67%;
 }
 
+.add-post.visible {
+	display: flex;
+}
+
 .add-title,
-.add-text {
+.add-text,
+.add-tags {
 	background: #FFFFFF;
 	border: 1px solid #E8E8E8;
 	padding: 23px 30px;

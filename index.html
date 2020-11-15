@@ -14,6 +14,18 @@
 	<!-- Пользовательские стили. -->
 	<link rel="stylesheet" href="./css/style.css">
 
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+		https://firebase.google.com/docs/web/setup#available-libraries -->
+
+	<!-- Firebase Authentication -->
+	<script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-auth.js"></script>
+
+	<!-- Firebase Realtime Database -->
+	<script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-database.js"></script>
+
 	<script src="./js/main.js" defer></script>
 </head>
 <body>
@@ -153,16 +165,21 @@
 		<form action="#" class="add-post">
 			<input
 				type="text"
-				name="post-title"
+				name="title"
 				class="add-title"
 				placeholder="Заголовок поста"
 			>
 			<textarea
-				name="post-text"
-				id="text"
+				name="text"
 				class="add-text"
 				placeholder="Текст вашего поста"
 			></textarea>
+			<input
+				type="text"
+				name="tags"
+				class="add-tags"
+				placeholder="Добавьте теги через запятую"
+			>
 			<div class="add-buttons">
 				<button type="submit" class="button add-button">
 					<svg class="icon icon-fire">
@@ -170,7 +187,7 @@
 					</svg>
 					Опубликовать пост
 				</button>
-				<button class="button button-outline">
+				<!-- <button class="button button-outline">
 					<svg class="icon icon-photo">
 						<use xlink:href="./img/icons.svg#photo"></use>
 					</svg>
@@ -181,7 +198,7 @@
 						<use xlink:href="./img/icons.svg#video"></use>
 					</svg>
 					Фото
-				</button>
+				</button> -->
 			</div>
 		</form>
 		<!-- // .add-post -->
@@ -232,8 +249,8 @@
 						<img
 							width="40"
 							height="40"
-							src="./img/avatar1.jpg"
-							alt="photoL user"
+							src="./img/no-photo.jpg"
+							alt="photo user"
 							class="user-avatar"
 						>
 						<span class="user-name">islamovartem</span>

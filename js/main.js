@@ -1,3 +1,17 @@
+// Your web app's Firebase configuration
+const firebaseConfig = {
+	apiKey: "AIzaSyCQhG_PiBwXb1VKYJBisJgx7sF8GYLtI_I",
+	authDomain: "pikadu-serjik.firebaseapp.com",
+	databaseURL: "https://pikadu-serjik.firebaseio.com",
+	projectId: "pikadu-serjik",
+	storageBucket: "pikadu-serjik.appspot.com",
+	messagingSenderId: "849094800155",
+	appId: "1:849094800155:web:a096a1cd1cec4f4cc419be"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+console.log('firebase: ', firebase);
+
 // Кнопка включения мобильного меню.
 let menuToggle = document.querySelector('#menu-toggle')
 // Мобильное меню.
@@ -41,19 +55,25 @@ const postsWrapper = document.querySelector('.posts')
 // Кнопка добавления поста.
 const buttonNewPost = document.querySelector('.button-new-post')
 
+// Форма добавления поста.
+const addPostElem = document.querySelector('.add-post')
+
 // Пользователи сайта (тестовые данные).
 const listUsers = [
 	{
 		id: '01',
 		email: 'maks@mail.com',
-		password: '12345',
+		password: '123',
 		displayName: 'MaksJS',
+		photo: '../img/avatar2.jpg',
 	},
 	{
 		id: '02',
 		email: 'kate@mail.com',
-		password: '123456',
+		password: '123',
 		displayName: 'kate',
+		photo: 'https://thispersondoesnotexist.com/image',
+
 	},
 ]
 
@@ -85,7 +105,9 @@ const setUsers = {
 			this.authorizeUser(user)
 
 			// Вызов переданной callback-функции.
-			handler()
+			if (handler) {
+				handler()
+			}
 		}
 
 		// Если введенный пароль не совпадает с паролем пользователя:
@@ -96,13 +118,13 @@ const setUsers = {
 
 	// Метод выхода пользователя с сайта. Принимает callback-функцию.
 	logOut(handler) {
-		console.log('Метод выхода пользователя с сайта.')
-
 		// Очистить переменную с авторизованным пользователем.
 		this.user = null
 
 		// Вызов переданной callback-функции.
-		handler()
+		if (handler) {
+			handler()
+		}
 	},
 
 	/*
@@ -110,9 +132,6 @@ const setUsers = {
 		Принимает email и пароль пользователя + callback-функцию.
 	*/
 	signUp(email, password, handler) {
-		// console.log('email, password: ', email, password);
-		console.log('Метод регистрации пользователя на сайте.')
-
 		// Если email не прошёл проверку:
 		if (!regExpValidEmail.test(email)) {
 			return alert('Email не валиден.')
@@ -140,7 +159,9 @@ const setUsers = {
 			this.authorizeUser(user)
 
 			// Вызов переданной callback-функции.
-			handler()
+			if (handler) {
+				handler()
+			}
 		}
 		// Если пользователь с переданным email уже зарегистрирован:
 		else {
@@ -169,7 +190,9 @@ const setUsers = {
 		}
 
 		// Вызов переданной callback-функции.
-		handler()
+		if (handler) {
+			handler()
+		}
 	},
 
 	/*
@@ -224,6 +247,31 @@ const setPosts = {
 			comments: 3,
 		},
 	],
+
+	/*
+	Метод добавляет новый пост в БД.
+	Принимает заголовок поста, его текст, теги и callback-функцию.
+	*/
+	addPost(title, text, tags, handler) {
+		// Добавить пост в начало массива со всеми постами.
+		this.allPosts.unshift({
+			title,
+			text,
+			tags: tags.split(',').map(item => item.trim()),
+			author: {
+				displayName: setUsers.user.displayName,
+				photo: setUsers.user.photo,
+			},
+			date: new Date().toLocaleString(),
+			like: 0,
+			comments: 0,
+		})
+
+		// Если callback-функция передана:
+		if (handler) {
+			handler()
+		}
+	}
 }
 
 /*
@@ -261,7 +309,19 @@ const toggleAuthDom = () => {
 		userElem.style.display = 'none'
 		// Скрыть кнопку добавления поста.
 		buttonNewPost.classList.remove('visible')
+		// Скрыть форму добавления поста.
+		addPostElem.classList.remove('visible')
+		// Показать контейнер для постов.
+		postsWrapper.classList.add('visible')
 	}
+}
+
+// Функция показывает форму добавления поста.
+const showAddPost = () => {
+	// Показать форму добавления поста.
+	addPostElem.classList.add('visible')
+	// Скрыть контейнер для постов.
+	postsWrapper.classList.remove('visible')
 }
 
 // Функция отображает все посты на странице.
@@ -288,7 +348,7 @@ const showAllPosts = () => {
 				<div class="post-text">${text}</div>
 
 				<div class="tags">
-					${tags.map(tag => `<a href="#" class="tag">#${tag}</a>`)}
+					${tags.map(tag => `<a href="#${tag}" class="tag">#${tag}</a>`)}
 				</div>
 			</div>
 			<!-- // .post-body -->
@@ -326,7 +386,7 @@ const showAllPosts = () => {
 				<div class="post-author">
 					<div class="author-about">
 						<a href="#" class="author-username">${author.displayName}</a>
-						<span class="post-time">5 минут назад</span>
+						<span class="post-time">${date}</span>
 					</div>
 					<a href="#" class="author-link">
 						<img
@@ -343,7 +403,13 @@ const showAllPosts = () => {
 		<!-- // .post -->`
 	})
 
+	// Вставить посты в контейнер для постов.
 	postsWrapper.innerHTML = postsHTML
+
+	// Скрыть форму добавления поста.
+	addPostElem.classList.remove('visible')
+	// Показать контейнер для постов.
+	postsWrapper.classList.add('visible')
 }
 
 // Функция инициализации приложения.
@@ -394,9 +460,66 @@ const init = () => {
 		menu.classList.toggle('visible')
 	})
 
+	// Повесить обработчик клика на кнопку добавления поста.
+	buttonNewPost.addEventListener('click', function (event) {
+		event.preventDefault()
+		showAddPost()
+	})
+
+	// Повесить обработчик отправки формы добавления поста.
+	addPostElem.addEventListener('submit', event => {
+		event.preventDefault()
+
+		// Элементы формы добавления поста.
+		const { title, text, tags } = addPostElem.elements
+
+		title.value = title.value.trim()
+		text.value = text.value.trim()
+		tags.value = tags.value.trim()
+
+		// Если заголовок поста короче 6 символов:
+		if (title.value.length < 6) {
+			alert('Слишком короткий заголовок.')
+			return
+		}
+
+		// Если пост короче 50 символов:
+		if (text.value.length < 50) {
+			alert('Слишком короткий пост.')
+			return
+		}
+
+		// Добавить пост в БД.
+		setPosts.addPost(title.value, text.value, tags.value, showAllPosts)
+
+		// Скрыть форму добавления поста.
+		addPostElem.classList.remove('visible')
+		// Очистить форму добавления поста.
+		addPostElem.reset()
+	})
+
 	showAllPosts()
 	toggleAuthDom()
 }
 
 // Повесить обработчик на событие загрузки всей HTML-страницы.
 document.addEventListener('DOMContentLoaded', init)
+
+// TODO - удалить!
+// Тестик.
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+	  console.log('User is signed in.')
+	  var displayName = user.displayName;
+	  var email = user.email;
+	  var emailVerified = user.emailVerified;
+	  var photoURL = user.photoURL;
+	  var isAnonymous = user.isAnonymous;
+	  var uid = user.uid;
+	  var providerData = user.providerData;
+	  // ...
+	} else {
+	  console.log('User is signed out.')
+	}
+  });
+// end.
