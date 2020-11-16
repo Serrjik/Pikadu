@@ -82,6 +82,35 @@ const setUsers = {
 	// Авторизованный на сайте пользователь.
 	user: null,
 
+	/* 
+		Метод использует слушатель Firebase, чтобы зарегистрировать 
+		пользователя. Принимает callback-функцию. 
+	*/
+	initUser(handler) {
+		/* 
+			Получаем зарегистрированного пользователя.
+			Вешаем наблюдателя Firebase на объект Auth 
+			(изменение состояния зарегистрированного пользователя). 
+		*/
+		firebase.auth().onAuthStateChanged(user => {
+			// Если пользователь зарегистрирован:
+			if (user) {
+				// Устанавливаем авторизованного на сайте пользователя.
+				this.user = user
+			}
+
+			// Если пользователь НЕ зарегистрирован:
+			else {
+				this.user = null
+			}
+
+			// Вызов переданной callback-функции для смены вида страницы.
+			if (handler) {
+				handler()
+			}
+		})
+	},
+
 	/*
 		Метод входа пользователя на сайт.
 		Принимает email и пароль пользователя + callback-функцию.
@@ -143,30 +172,39 @@ const setUsers = {
 			return
 		}
 
-		// Если пользователь с переданным email ещё не зарегистрирован:
-		if (!this.getUser(email)) {
-			// Создать пользователя.
-			const user = {
-				email,
-				password,
-				displayName: email.substring(0, email.indexOf('@')),
-			}
+		/* 
+			Если пользователь с переданным email ещё не зарегистрирован 
+			(код посредством Firebase). Создать учетную запись на основе пароля.
+		*/
+		
 
-			// Добавить созданного пользователя в список пользователей.
-			listUsers.push(user)
+		/* 
+			Если пользователь с переданным email ещё не зарегистрирован 
+			(код до Firebase): 
+		*/
+		// if (!this.getUser(email)) {
+		// 	// Создать пользователя.
+		// 	const user = {
+		// 		email,
+		// 		password,
+		// 		displayName: email.substring(0, email.indexOf('@')),
+		// 	}
 
-			// Авторизовать пользователя на сайте!
-			this.authorizeUser(user)
+		// 	// Добавить созданного пользователя в список пользователей.
+		// 	listUsers.push(user)
 
-			// Вызов переданной callback-функции.
-			if (handler) {
-				handler()
-			}
-		}
-		// Если пользователь с переданным email уже зарегистрирован:
-		else {
-			alert('Пользователь с таким email уже зарегистрирован.')
-		}
+		// 	// Авторизовать пользователя на сайте!
+		// 	this.authorizeUser(user)
+
+		// 	// Вызов переданной callback-функции.
+		// 	if (handler) {
+		// 		handler()
+		// 	}
+		// }
+		// // Если пользователь с переданным email уже зарегистрирован:
+		// else {
+		// 	alert('Пользователь с таким email уже зарегистрирован.')
+		// }
 	},
 
 	/*
@@ -498,8 +536,10 @@ const init = () => {
 		addPostElem.reset()
 	})
 
+	// Получить зарегистрированного пользователя.
+	setUsers.initUser(toggleAuthDom)
+
 	showAllPosts()
-	toggleAuthDom()
 }
 
 // Повесить обработчик на событие загрузки всей HTML-страницы.
@@ -507,19 +547,19 @@ document.addEventListener('DOMContentLoaded', init)
 
 // TODO - удалить!
 // Тестик.
-firebase.auth().onAuthStateChanged(function(user) {
-	if (user) {
-	  console.log('User is signed in.')
-	  var displayName = user.displayName;
-	  var email = user.email;
-	  var emailVerified = user.emailVerified;
-	  var photoURL = user.photoURL;
-	  var isAnonymous = user.isAnonymous;
-	  var uid = user.uid;
-	  var providerData = user.providerData;
-	  // ...
-	} else {
-	  console.log('User is signed out.')
-	}
-  });
+// firebase.auth().onAuthStateChanged(function(user) {
+// 	if (user) {
+// 	  console.log('User is signed in.')
+// 	  var displayName = user.displayName;
+// 	  var email = user.email;
+// 	  var emailVerified = user.emailVerified;
+// 	  var photoURL = user.photoURL;
+// 	  var isAnonymous = user.isAnonymous;
+// 	  var uid = user.uid;
+// 	  var providerData = user.providerData;
+// 	  // ...
+// 	} else {
+// 	  console.log('User is signed out.')
+// 	}
+//   });
 // end.
