@@ -275,26 +275,36 @@ const setUsers = {
 		Метод записывает информацию о пользователе из переданных параметров.
 		Принимает имя и URL к фото пользователя + callback-функцию.
 	*/
-	editUser(userName, userPhoto, handler) {
-		userName = userName.trim()
-		userPhoto = userPhoto.trim()
+	editUser(displayName, photoURL, handler) {
+		// Залогиненный пользователь.
+		const user = firebase.auth().currentUser
+
+		displayName = displayName.trim()
+		photoURL = photoURL.trim()
 
 		// Если имя пользователя передано:
-		if (userName) {
-			// Изменяем имя пользователя.
-			this.user.displayName = userName
+		if (displayName) {
+			// Если URL к фото пользователя передан:
+			if (photoURL) {
+				// Изменяем имя пользователя и URL к фото пользователя.
+				user.updateProfile({
+					displayName,
+					photoURL,
+				}).then(handler)
+			}
+			// Если URL к фото пользователя НЕ передан:
+			else {
+				// Изменяем имя пользователя.
+				user.updateProfile({
+					displayName,
+				}).then(handler)
+			}
 		}
 
-		// Если URL к фото пользователя передан:
-		if (userPhoto) {
-			// Изменяем URL к фото пользователя.
-			this.user.photo = userPhoto
-		}
-
-		// Вызов переданной callback-функции.
-		if (handler) {
-			handler()
-		}
+		// // Вызов переданной callback-функции.
+		// if (handler) {
+		// 	handler()
+		// }
 	},
 
 	/*
