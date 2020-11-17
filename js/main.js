@@ -175,8 +175,38 @@ const setUsers = {
 		/* 
 			Если пользователь с переданным email ещё не зарегистрирован 
 			(код посредством Firebase). Создать учетную запись на основе пароля.
+			createUserWithEmailAndPassword возвращает Promise.
 		*/
-		
+		firebase.auth().createUserWithEmailAndPassword(email, password)
+			// Если регистрация успешная:
+			.then(data => {
+				console.log('data: ', data);
+			})
+			// Если регистрация НЕ успешная:
+			.catch(err => {
+				// Код ошибки (строка).
+				const errCode = err.code
+				// Сообщение об ошибке.
+				const errMessage = err.message
+				
+				// Обработка кодов ошибок.
+				if (errCode === 'auth/weak-password') {
+					console.log('errMessage: ', errMessage);
+					alert('Слабый пароль.')
+				}
+
+				else if (errCode === 'auth/email-already-in-use') {
+					console.log('errMessage: ', errMessage);
+					alert('Этот email уже используется.')
+				} 
+				
+				else {
+					console.log('errMessage: ', errMessage);
+					alert(errMessage)
+				}
+				
+				console.log('err: ', err);
+			})
 
 		/* 
 			Если пользователь с переданным email ещё не зарегистрирован 
