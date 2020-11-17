@@ -82,15 +82,15 @@ const setUsers = {
 	// Авторизованный на сайте пользователь.
 	user: null,
 
-	/* 
-		Метод использует слушатель Firebase, чтобы зарегистрировать 
-		пользователя. Принимает callback-функцию. 
+	/*
+		Метод использует слушатель Firebase, чтобы зарегистрировать
+		пользователя. Принимает callback-функцию.
 	*/
 	initUser(handler) {
-		/* 
+		/*
 			Получаем зарегистрированного пользователя.
-			Вешаем наблюдателя Firebase на объект Auth 
-			(изменение состояния зарегистрированного пользователя). 
+			Вешаем наблюдателя Firebase на объект Auth
+			(изменение состояния зарегистрированного пользователя).
 		*/
 		firebase.auth().onAuthStateChanged(user => {
 			// Если пользователь зарегистрирован:
@@ -146,14 +146,19 @@ const setUsers = {
 	},
 
 	// Метод выхода пользователя с сайта. Принимает callback-функцию.
-	logOut(handler) {
-		// Очистить переменную с авторизованным пользователем.
-		this.user = null
+	logOut() {
+		// Разлогиниться из Firebase.
+		firebase.auth().signOut()
 
-		// Вызов переданной callback-функции.
-		if (handler) {
-			handler()
-		}
+		// Ниже закомментированный код до Firebase.
+
+		// // Очистить переменную с авторизованным пользователем.
+		// this.user = null
+
+		// // Вызов переданной callback-функции.
+		// if (handler) {
+		// 	handler()
+		// }
 	},
 
 	/*
@@ -172,8 +177,8 @@ const setUsers = {
 			return
 		}
 
-		/* 
-			Если пользователь с переданным email ещё не зарегистрирован 
+		/*
+			Если пользователь с переданным email ещё не зарегистрирован
 			(код посредством Firebase). Создать учетную запись на основе пароля.
 			createUserWithEmailAndPassword возвращает Promise.
 		*/
@@ -188,7 +193,7 @@ const setUsers = {
 				const errCode = err.code
 				// Сообщение об ошибке.
 				const errMessage = err.message
-				
+
 				// Обработка кодов ошибок.
 				if (errCode === 'auth/weak-password') {
 					console.log('errMessage: ', errMessage);
@@ -198,19 +203,19 @@ const setUsers = {
 				else if (errCode === 'auth/email-already-in-use') {
 					console.log('errMessage: ', errMessage);
 					alert('Этот email уже используется.')
-				} 
-				
+				}
+
 				else {
 					console.log('errMessage: ', errMessage);
 					alert(errMessage)
 				}
-				
+
 				console.log('err: ', err);
 			})
 
-		/* 
-			Если пользователь с переданным email ещё не зарегистрирован 
-			(код до Firebase): 
+		/*
+			Если пользователь с переданным email ещё не зарегистрирован
+			(код до Firebase):
 		*/
 		// if (!this.getUser(email)) {
 		// 	// Создать пользователя.
@@ -503,7 +508,7 @@ const init = () => {
 	// Повесить обработчик клика на кнопку выхода с сайта.
 	exitElem.addEventListener('click', event => {
 		event.preventDefault()
-		setUsers.logOut(toggleAuthDom)
+		setUsers.logOut()
 	})
 
 	// Повесить обработчик клика на кнопку редактирования информации о пользователе.
