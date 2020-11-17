@@ -123,26 +123,55 @@ const setUsers = {
 			return alert('Email не валиден.')
 		}
 
-		// Пользователь с переданным email.
-		const user = this.getUser(email)
-		/*
-			Если переданный пароль совпадает
-			с паролем зарегистрированного пользователя:
-		*/
-		if (user && user.password === password) {
-			// Авторизовать пользователя на сайте!
-			this.authorizeUser(user)
+		// Залогиниться через Firebase.
+		firebase.auth().signInWithEmailAndPassword(email, password)
+			.catch(err => {
+				// Код ошибки (строка).
+				const errCode = err.code
+				// Сообщение об ошибке.
+				const errMessage = err.message
 
-			// Вызов переданной callback-функции.
-			if (handler) {
-				handler()
-			}
-		}
+				// Обработка кодов ошибок.
+				if (errCode === 'auth/wrong-password') {
+					console.log('errMessage: ', errMessage);
+					alert('Неверный пароль.')
+				}
 
-		// Если введенный пароль не совпадает с паролем пользователя:
-		else {
-			alert('Пользователь с такими данными не найден!')
-		}
+				else if (errCode === 'auth/user-not-found') {
+					console.log('errMessage: ', errMessage);
+					alert('Пользователь не найден.')
+				}
+
+				else {
+					console.log('errMessage: ', errMessage);
+					alert(errMessage)
+				}
+
+				console.log('err: ', err);
+			})
+
+		// Ниже закомментированный код до Firebase.
+
+		// // Пользователь с переданным email.
+		// const user = this.getUser(email)
+		// /*
+		// 	Если переданный пароль совпадает
+		// 	с паролем зарегистрированного пользователя:
+		// */
+		// if (user && user.password === password) {
+		// 	// Авторизовать пользователя на сайте!
+		// 	this.authorizeUser(user)
+
+		// 	// Вызов переданной callback-функции.
+		// 	if (handler) {
+		// 		handler()
+		// 	}
+		// }
+
+		// // Если введенный пароль не совпадает с паролем пользователя:
+		// else {
+		// 	alert('Пользователь с такими данными не найден!')
+		// }
 	},
 
 	// Метод выхода пользователя с сайта. Принимает callback-функцию.
