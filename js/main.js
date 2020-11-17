@@ -214,7 +214,8 @@ const setUsers = {
 		firebase.auth().createUserWithEmailAndPassword(email, password)
 			// Если регистрация успешная:
 			.then(data => {
-				console.log('data: ', data);
+				// Установить отображаемое имя пользователя.
+				this.editUser(email.substring(0, email.indexOf('@')), null, handler)
 			})
 			// Если регистрация НЕ успешная:
 			.catch(err => {
@@ -279,8 +280,8 @@ const setUsers = {
 		// Залогиненный пользователь.
 		const user = firebase.auth().currentUser
 
-		displayName = displayName.trim()
-		photoURL = photoURL.trim()
+		displayName = displayName ? displayName.trim() : null
+		photoURL = photoURL ? photoURL.trim() : null
 
 		// Если имя пользователя передано:
 		if (displayName) {
@@ -408,7 +409,7 @@ const toggleAuthDom = () => {
 			Иначе оставляем тот URL,
 			который записан сейчас в свойство src элемента.
 		*/
-		userAvatarElem.src = user.photo || userAvatarElem.src
+		userAvatarElem.src = user.photoURL || userAvatarElem.src
 		// Показать кнопку добавления поста.
 		buttonNewPost.classList.add('visible')
 	}
