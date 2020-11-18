@@ -28,6 +28,8 @@ const loginForm = loginElem.querySelector('.login-form')
 const emailInput = loginForm.querySelector('.login-email')
 // Инпут для ввода пароля.
 const passwordInput = loginForm.querySelector('.login-password')
+// Кнопка "Забыли пароль?".
+const loginForget = loginForm.querySelector('.login-forget')
 // Кнопка "Регистрация".
 const loginSignup = loginForm.querySelector('.login-signup')
 
@@ -323,6 +325,19 @@ const setUsers = {
 	// authorizeUser(user) {
 	// 	this.user = user
 	// },
+
+	// Метод отправляет письмо для сброса пароля.
+	sendForget(email) {
+		firebase.auth().sendPasswordResetEmail(email)
+			// Если письмо отправлено:
+			.then(() => {
+				alert('Письмо отправлено.')
+			})
+			// Если письмо НЕ отправлено:
+			.catch(err => {
+				console.log(err)
+			})
+	},
 }
 
 // Объект для работы с постами.
@@ -549,6 +564,16 @@ const showAllPosts = () => {
 
 // Функция инициализации приложения.
 const init = () => {
+	// Повесить обработчик клика на кнопку "Забыли пароль?".
+	loginForget.addEventListener('click', event => {
+		event.preventDefault()
+
+		// Отправить письмо для сброса пароля на адрес в инпуте для ввода email'а.
+		setUsers.sendForget(emailInput.value)
+		// Очистить инпут для ввода email'а.
+		emailInput.value = ''
+	})
+
 	// Повесить обработчик отправки формы на форму авторизации/регистрации.
 	loginForm.addEventListener('submit', event => {
 		event.preventDefault()
